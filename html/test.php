@@ -81,14 +81,16 @@ echo '<table>';
     $counter = 0;
     foreach($dirList as $dirname){
         // フォルダの寿命確認-------------------------------------
-        if(!file_exists($dirname.'/create.txt')){
-            file_put_contents($dirname.'/create.txt', time());
-        }
-        $unit_time = (int)file_get_contents($dirname.'/create.txt');				
-        $alive_time = $unit_time + (1 * 24 * 60 * 60) - time(); // 1週間
-        if(0 > $alive_time){
-            system("rm -rf {$dirname}");
-            continue;
+        if(!strcmp($dirname[0], "_")){
+            if(!file_exists($dirname.'/create.txt')){
+                file_put_contents($dirname.'/create.txt', time());
+            }
+            $unit_time = (int)file_get_contents($dirname.'/create.txt');				
+            $alive_time = $unit_time + (1 * 24 * 60 * 60) - time(); // 1週間
+            if(0 > $alive_time){
+                system("rm -rf {$dirname}");
+                continue;
+            }
         }
         // ----------------------------------------------------
         echo '<tr style="background-color:black;">';
