@@ -1,9 +1,7 @@
-import requests, json
+import requests
 from bs4 import BeautifulSoup
 import re
 import datetime
-from concurrent.futures import ThreadPoolExecutor
-import comment_painter
 import niconico_comment_getter
 import os
 import subprocess
@@ -60,25 +58,7 @@ for item in soup.find_all("item"):
     else:
         print(f"[{movieId}] skip commentGet")
 
-executor = ThreadPoolExecutor(max_workers=10)
 for movieId in movieIdList:
-    if not os.path.exists(f"{currentDir}{movieId}/paint.mp4"):
-        print(f"[function]comment_painter.commentPainter({currentDir}, {movieId})\n")
-        executor.submit(comment_painter.commentPainter, currentDir, movieId)
-    else:
-        print(f"[{movieId}] skip paint")
-
-executor.shutdown()
-
-for movieId in movieIdList:
-    if not os.path.exists(f"{currentDir}{movieId}/{titleDict[movieId]}.mp4"):
-        command(f"{currentDir}{movieId}/ffmpeg.log",
-                f"ffmpeg -i '{currentDir}{movieId}/original.mp4' "
-                f"-i '{currentDir}{movieId}/paint.mp4' "
-                f"-c:v h264 -c:a aac -map 0:a:0 -map 1:v:0 "
-                f"'{currentDir}{movieId}/{titleDict[movieId]}.mp4'")
-    else:
-        print(f"[{movieId}] skip ffmpeg")
     if not os.path.exists(f"{currentDir}{movieId}/create.txt"):
         with open(f"{currentDir}{movieId}/create.txt", "w") as f:
             f.write(str(int(datetime.datetime.now().timestamp())))

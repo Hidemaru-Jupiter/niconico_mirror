@@ -27,9 +27,11 @@ def get(movieId):
         for el in resjs:
             if "chat" in el:
                 commentList.append([
-                        commentId,
-                        int(el["chat"]["vpos"]),
-                        el["chat"]["content"].replace("\n", "  ").replace("\t", "  ")
+                    int(el["chat"]["vpos"])/100,
+                    0,
+                    16777215,
+                    "",
+                    el["chat"]["content"].replace("\n", "  ").replace("\t", "  ")
                 ])
                 commentId += 1
     return commentList

@@ -38,17 +38,29 @@ def niconicoComment(currentDir, movieId):
 
         res = requests.post(url, json.dumps(params), headers=headers).json()
         
-        
-        commentId = 0
+        # [vposMs/1000], type, color, author, commentText
+        # type
+        ## 0 :right
+        ## 1 :top
+        ## 2 :bottom
+        # color
+        ## Decimal color code
         for threads in res["data"]["threads"]:
             for comments in threads["comments"]:
-                commentList.append([int(commentId), int(comments["vposMs"]),
-                                    comments["body"].replace("\n", "  ").replace("\t", "  ")])
-                commentId+=1
+                commentList.append([
+                    int(comments["vposMs"])/1000,
+                    0,
+                    16777215,
+                    "",
+                    comments["body"].replace("\n", "  ").replace("\t", "  ")
+                ])
     except:
         print(f"[{movieId}]use niconico_comment_getter_legacy")
         commentList = niconico_comment_getter_legacy.get(movieId)
+    output_json = {
+        "code":0,
+        "data":commentList
+    }
     with open(f"{currentDir}{movieId}/comment.txt", "w") as f:
-        for comment in sorted(commentList, key=lambda x:x[1]):
-            f.write(str(comment[0])+"\t"+str(comment[1])+"\t"+str(comment[2])+"\n")
-    return sorted(commentList, key=lambda x:x[1])
+        f.write(json.dumps(output_json))
+niconicoComment("", "sm29708915")
