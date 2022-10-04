@@ -57,4 +57,6 @@ for item in soup.find_all("item"):
         print(f"[{movieId}] skip commentGet")
     with open(f"{currentDir}{movieId}/create.txt", "w") as f:
         f.write(str(int(datetime.datetime.now().timestamp())))
+    if not os.path.exists(f"{currentDir}{movieId}/hconcat100_thumbnail.jpg"):
+        thumbnail.make('{currentDir}{movieId}/original.mp4', '{currentDir}{movieId}/hconcat100_thumbnail.jpg')
 print('end')

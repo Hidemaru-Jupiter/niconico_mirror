@@ -63,4 +63,4 @@ def niconicoComment(currentDir, movieId):
     }
     with open(f"{currentDir}{movieId}/comment.txt", "w") as f:
         f.write(json.dumps(output_json))
-niconicoComment("", "sm29708915")
+# niconicoComment("", "sm29708915")
