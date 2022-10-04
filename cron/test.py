@@ -5,6 +5,7 @@ import datetime
 import niconico_comment_getter
 import os
 import subprocess
+import thumbnail
 
 def command(dump, cmd):
     print(f"[cmd]{cmd}\n")
@@ -47,9 +48,6 @@ for item in soup.find_all("item"):
                     f"--merge-output-format mp4 "
                     f"-o 'thumbnail:{currentDir}{movieId}/thumbnail' "
                     f"-o '{currentDir}{movieId}/original.mp4' {url}")
-        if not status == 0:
-            movieIdList.remove(movieId)
-            
     else:
         print(f"[{movieId}] skip yt-dlp")
     if not os.path.exists(f"{currentDir}{movieId}/comment.txt"):
@@ -57,10 +55,6 @@ for item in soup.find_all("item"):
         niconico_comment_getter.niconicoComment(currentDir, movieId)
     else:
         print(f"[{movieId}] skip commentGet")
-
-for movieId in movieIdList:
-    if not os.path.exists(f"{currentDir}{movieId}/create.txt"):
-        with open(f"{currentDir}{movieId}/create.txt", "w") as f:
-            f.write(str(int(datetime.datetime.now().timestamp())))
-    
+    with open(f"{currentDir}{movieId}/create.txt", "w") as f:
+        f.write(str(int(datetime.datetime.now().timestamp())))
 print('end')
