@@ -1,5 +1,4 @@
 import cv2
-from tqdm import tqdm
 
 def make(video_path, outName):
     cap = cv2.VideoCapture(video_path)
@@ -14,7 +13,7 @@ def make(video_path, outName):
     per_thumbnail = (totalframe-1)/100
 
     frameList = []
-    for i in tqdm(range(100)):
+    for i in range(100):
         cap.set(cv2.CAP_PROP_POS_FRAMES, int(per_thumbnail*i))
         ret, frame = cap.read()
         mini_frame = cv2.resize(frame, dsize=(mini_width, mini_height))
