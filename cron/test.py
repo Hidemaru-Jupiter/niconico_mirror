@@ -31,7 +31,7 @@ currentDir = "/media/hiita/2C8CE78D8CE74FBE/www/html/"
 response = requests.get("https://www.nicovideo.jp/ranking/genre/all?term=hour&rss=2.0")
 soup = BeautifulSoup(response.text, 'lxml')
 movieIdList = []
-for item in soup.find_all("item"):
+for item in soup.find_all("item")[:3]:
     title = re.sub(r"第[0-9]+位：",
                       "", item.find("title").text)
     url = re.search(r"https://www.nicovideo.jp/watch/(sm|so)[0-9]+"
@@ -58,5 +58,6 @@ for item in soup.find_all("item"):
     with open(f"{currentDir}{movieId}/create.txt", "w") as f:
         f.write(str(int(datetime.datetime.now().timestamp())))
     if not os.path.exists(f"{currentDir}{movieId}/hconcat100_thumbnail.jpg"):
-        thumbnail.make('{currentDir}{movieId}/original.mp4', '{currentDir}{movieId}/hconcat100_thumbnail.jpg')
+        print(f"[function]thumbnail.make({currentDir}, {movieId})\n")
+        thumbnail.make(f'{currentDir}{movieId}/original.mp4', f'{currentDir}{movieId}/hconcat100_thumbnail.jpg')
 print('end')
