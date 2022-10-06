@@ -31,7 +31,7 @@ currentDir = "/media/hiita/2C8CE78D8CE74FBE/www/html/"
 response = requests.get("https://www.nicovideo.jp/ranking/genre/all?term=hour&rss=2.0")
 soup = BeautifulSoup(response.text, 'lxml')
 movieIdList = []
-for item in soup.find_all("item")[:3]:
+for item in soup.find_all("item"):
     title = re.sub(r"第[0-9]+位：",
                       "", item.find("title").text)
     url = re.search(r"https://www.nicovideo.jp/watch/(sm|so)[0-9]+"
