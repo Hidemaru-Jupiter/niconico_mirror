@@ -10,7 +10,7 @@
         container: document.getElementById('dplayer'),
         screenshot: true,
         video: {
-            thumbnails:''
+            thumbnails:"./sm41187361/hconcat100_thumbnail.jpg",
         },
         danmaku:{
             id:"test",
@@ -20,9 +20,6 @@
 <table>
     <tr>
         <th style="width:20%;height:10%">
-            <button onclick="dp.video.requestFullscreen();" style="width:100%;height:100%;" >全画面モード</button>
-        </th>
-        <th style="width:1%;height:10%">
             <input type="checkbox" id="auto" checked>
         </th>
         
@@ -65,7 +62,7 @@
                 {
                     url: uri_dir + encodeURIComponent('original.mp4'),
                     pic: uri_dir + encodeURIComponent('thumbnail.jpg'),
-                    thumbnails: uri_dir + encodeURIComponent('hconcat100_thumbnail.jpg'),
+                    thumbnails: uri_dir + encodeURIComponent('hconcat100_thumbnail.jpg')
                 },
                 {
                     id: dir.split("/")[1],
@@ -90,6 +87,18 @@
             }
         }
     });
+    let priv_width = window.innerWidth;
+    let priv_height = window.innerHeight;
+    window.addEventListener('resize', ()=>{
+        if (window.innerWidth > window.innerHeight+100 && 
+            priv_height > priv_width+100 &&
+            dp.fullScreen.isFullScreen() === undefined)
+        {
+            dp.fullScreen.request('browser');
+        }
+        priv_width = window.innerWidth;
+        priv_height = window.innerHeight;
+    })
 </script>
 <div style="width:100%;height:70%;overflow-y:scroll;">
 <?php
