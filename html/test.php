@@ -10,7 +10,6 @@
         container: document.getElementById('dplayer'),
         screenshot: true,
         video: {
-            thumbnails:"./sm41187361/hconcat100_thumbnail.jpg",
         },
         danmaku:{
             id:"test",
@@ -61,14 +60,16 @@
             dp.switchVideo(
                 {
                     url: uri_dir + encodeURIComponent('original.mp4'),
-                    pic: uri_dir + encodeURIComponent('thumbnail.jpg'),
-                    thumbnails: uri_dir + encodeURIComponent('hconcat100_thumbnail.jpg')
+                    pic: uri_dir + encodeURIComponent('thumbnail.jpg')
                 },
                 {
                     id: dir.split("/")[1],
                     api: uri_dir + 'comment.txt'
                 }
             );
+            dp.controller.player.options.video.thumbnails
+                     = uri_dir + 'hconcat100_thumbnail.jpg';
+            dp.controller.initThumbnails();
             if (typeof cookieArray[encodeURIComponent(dir)] !== 'undefined'){
                 dp.video.currentTime = Number(cookieArray[encodeURIComponent(dir)]);
             }
