@@ -6,6 +6,7 @@ import niconico_comment_getter
 import os
 import subprocess
 import thumbnail
+import traceback
 
 def command(dump, cmd):
     print(f"[cmd]{cmd}\n")
@@ -32,32 +33,35 @@ response = requests.get("https://www.nicovideo.jp/ranking/genre/all?term=hour&rs
 soup = BeautifulSoup(response.text, 'lxml')
 movieIdList = []
 for item in soup.find_all("item"):
-    title = re.sub(r"第[0-9]+位：",
-                      "", item.find("title").text)
-    url = re.search(r"https://www.nicovideo.jp/watch/(sm|so)[0-9]+"
-                    ,item.text).group()
-    movieId = url.split("/")[-1]
-    movieIdList.append(movieId)
-    titleDict[movieId] = title
-    
-    if not os.path.exists(f"{currentDir}{movieId}"):
-        os.mkdir(f"{currentDir}{movieId}")
-    if not os.path.exists(f"{currentDir}{movieId}/original.mp4"):
-        status = command(f"{currentDir}{movieId}/yt-dlp.log",
-                    f"yt-dlp --write-url --write-thumbnail --convert-thumbnails jpg "
-                    f"--merge-output-format mp4 "
-                    f"-o 'thumbnail:{currentDir}{movieId}/thumbnail' "
-                    f"-o '{currentDir}{movieId}/original.mp4' {url}")
-    else:
-        print(f"[{movieId}] skip yt-dlp")
-    if not os.path.exists(f"{currentDir}{movieId}/comment.txt"):
-        print(f"[function]niconico_comment_getter.niconicoComment({currentDir}, {movieId})\n")
-        niconico_comment_getter.niconicoComment(currentDir, movieId)
-    else:
-        print(f"[{movieId}] skip commentGet")
-    with open(f"{currentDir}{movieId}/create.txt", "w") as f:
-        f.write(str(int(datetime.datetime.now().timestamp())))
-    if not os.path.exists(f"{currentDir}{movieId}/hconcat100_thumbnail.jpg"):
-        print(f"[function]thumbnail.make({currentDir}, {movieId})\n")
-        thumbnail.make(f'{currentDir}{movieId}/original.mp4', f'{currentDir}{movieId}/hconcat100_thumbnail.jpg')
+    try:
+        title = re.sub(r"第[0-9]+位：",
+                        "", item.find("title").text)
+        url = re.search(r"https://www.nicovideo.jp/watch/(sm|so)[0-9]+"
+                        ,item.text).group()
+        movieId = url.split("/")[-1]
+        movieIdList.append(movieId)
+        titleDict[movieId] = title
+        
+        if not os.path.exists(f"{currentDir}{movieId}"):
+            os.mkdir(f"{currentDir}{movieId}")
+        if not os.path.exists(f"{currentDir}{movieId}/original.mp4"):
+            status = command(f"{currentDir}{movieId}/yt-dlp.log",
+                        f"yt-dlp --write-url --write-thumbnail --convert-thumbnails jpg "
+                        f"--merge-output-format mp4 "
+                        f"-o 'thumbnail:{currentDir}{movieId}/thumbnail' "
+                        f"-o '{currentDir}{movieId}/original.mp4' {url}")
+        else:
+            print(f"[{movieId}] skip yt-dlp")
+        if not os.path.exists(f"{currentDir}{movieId}/comment.txt"):
+            print(f"[function]niconico_comment_getter.niconicoComment({currentDir}, {movieId})\n")
+            niconico_comment_getter.niconicoComment(currentDir, movieId)
+        else:
+            print(f"[{movieId}] skip commentGet")
+        with open(f"{currentDir}{movieId}/create.txt", "w") as f:
+            f.write(str(int(datetime.datetime.now().timestamp())))
+        if not os.path.exists(f"{currentDir}{movieId}/hconcat100_thumbnail.jpg"):
+            print(f"[function]thumbnail.make({currentDir}, {movieId})\n")
+            thumbnail.make(f'{currentDir}{movieId}/original.mp4', f'{currentDir}{movieId}/hconcat100_thumbnail.jpg')
+    except:
+        print(traceback.format_exc())
 print('end')
